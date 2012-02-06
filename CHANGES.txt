@@ -53,6 +53,7 @@
 * Patch 3463020: Add windres environment variable for makefiles (icebreaker)
 * Bug 3413866: Incorrect VS200x .csproj relative source paths
 * Patch 3111264: Allow path.join() to accept any number of args
+* Patch 3353975: Support usage of premake as a library (Konstantin Tokarev)
 
 
 -------
