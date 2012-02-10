@@ -56,12 +56,3 @@
 	EndProjectSection
 		]]
 	end
-
-
-	function suite.On2010_Cs()
-		-- 2010 C# gets rules from the projects rather than the solution
-		_ACTION = "vs2010"
-		prepare("C#")
-		local actual = io.endcapture()
-		test.istrue(actual:len() == 0)
-	end

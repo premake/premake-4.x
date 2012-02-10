@@ -127,6 +127,12 @@
 				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 				_p(2,'<OutDir '..if_config_and_platform() ..'>%s\\</OutDir>'
 						, premake.esc(cfginfo.name),premake.esc(cfg.buildtarget.directory) )
+
+				if cfg.platform == "Xbox360" then
+					_p(2,'<OutputFile '..if_config_and_platform() ..'>$(OutDir)%s</OutputFile>'
+							, premake.esc(cfginfo.name),cfg.buildtarget.name )
+				end						
+
 				_p(2,'<IntDir '..if_config_and_platform() ..'>%s\\</IntDir>'
 						, premake.esc(cfginfo.name), premake.esc(cfg.objectsdir))
 				_p(2,'<TargetName '..if_config_and_platform() ..'>%s</TargetName>'
@@ -362,7 +368,8 @@
 	end
 
 	local function item_def_lib(cfg)
-		if cfg.kind == 'StaticLib' then
+       -- The Xbox360 project files are stored in another place in the project file.
+		if cfg.kind == 'StaticLib' and cfg.platform ~= "Xbox360" then
 			_p(1,'<Lib>')
 				_p(2,'<OutputFile>$(OutDir)%s</OutputFile>',cfg.buildtarget.name)
 				additional_options(2,cfg)
