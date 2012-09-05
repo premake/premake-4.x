@@ -114,7 +114,7 @@
 			if path.iscppfile(file) then
 				_p('$(OBJDIR)/%s.o: %s', _MAKE.esc(path.getbasename(file)), _MAKE.esc(file))
 				_p('\t@echo $(notdir $<)')
-				cpp.buildcommand(path.iscfile(file))
+				cpp.buildcommand(path.iscfile(file), "o")
 			elseif (path.getextension(file) == ".rc") then
 				_p('$(OBJDIR)/%s.res: %s', _MAKE.esc(path.getbasename(file)), _MAKE.esc(file))
 				_p('\t@echo $(notdir $<)')
@@ -310,7 +310,7 @@
 		_p('else')
 		_p('\t$(SILENT) xcopy /D /Y /Q "$(subst /,\\,$<)" "$(subst /,\\,$(OBJDIR))" 1>nul')
 		_p('endif')
-		cpp.buildcommand(prj.language == "C")
+		cpp.buildcommand(prj.language == "C", "gch")
 		_p('endif')
 		_p('')
 	end
@@ -320,9 +320,7 @@
 -- Build command for a single file.
 --
 
-	function cpp.buildcommand(iscfile)
+	function cpp.buildcommand(iscfile, objext)
 		local flags = iif(iscfile, '$(CC) $(CFLAGS)', '$(CXX) $(CXXFLAGS)')
-		_p('\t$(SILENT) %s -o "$@" -MF $(@:%%.o=%%.d) -c "$<"', flags)
+		_p('\t$(SILENT) %s -o "$@" -MF $(@:%%.%s=%%.d) -c "$<"', flags, objext)
 	end
-
-
