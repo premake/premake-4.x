@@ -47,17 +47,9 @@ ifndef verbose
   SILENT = @
 endif
 
-ifndef CC
-  CC = gcc
-endif
-
-ifndef CXX
-  CXX = g++
-endif
-
-ifndef AR
-  AR = ar
-endif
+CC = gcc
+CXX = g++
+AR = ar
 
 ifndef RESCOMP
   ifdef WINDRES

@@ -147,19 +147,9 @@
 		_p('endif')
 		_p('')
 
-		_p('ifndef CC')
-		_p('  CC = %s', cc.cc)
-		_p('endif')
-		_p('')
-
-		_p('ifndef CXX')
-		_p('  CXX = %s', cc.cxx)
-		_p('endif')
-		_p('')
-
-		_p('ifndef AR')
-		_p('  AR = %s', cc.ar)
-		_p('endif')
+		_p('CC = %s', cc.cc)
+		_p('CXX = %s', cc.cxx)
+		_p('AR = %s', cc.ar)
 		_p('')
 		
 		_p('ifndef RESCOMP')
