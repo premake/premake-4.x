@@ -552,9 +552,14 @@
 				-- does the filename match this vpath pattern?
 				local i = vpath:find(path.wildcards(pattern))
 				if i == 1 then				
-					-- yes; trim the leading portion of the path
+					-- yes; trim the pattern out of the target file's path
+					local leaf
 					i = pattern:find("*", 1, true) or (pattern:len() + 1)
-					local leaf = vpath:sub(i)
+					if i < filename:len() then
+						leaf = filename:sub(i)
+					else
+						leaf = path.getname(filename)
+					end
 					if leaf:startswith("/") then
 						leaf = leaf:sub(2)
 					end
