@@ -160,13 +160,31 @@ int premake_locate(lua_State* L, const char* argv0)
 		lua_pushcfunction(L, os_pathsearch);
 		lua_pushstring(L, argv0);
 		lua_pushstring(L, getenv("PATH"));
-		if (lua_pcall(L, 2, 1, 0) == OKAY)
+		if (lua_pcall(L, 2, 1, 0) == OKAY && !lua_isnil(L, -1))
 		{
 			lua_pushstring(L, "/");
 			lua_pushstring(L, argv0);
 			lua_concat(L, 3);
 			path = lua_tostring(L, -1);
 		}
+	}
+
+	/* If all else fails, use argv[0] as-is and hope for the best */
+	if (!path)
+	{
+		/* make it absolute, if needed */
+		os_getcwd(L);
+		lua_pushstring(L, "/");
+		lua_pushstring(L, argv0);
+		
+		if (!path_isabsolute(L)) {
+			lua_concat(L, 3);
+		}
+		else {
+			lua_pop(L, 1);
+		}
+		
+		path = lua_tostring(L, -1);
 	}
 
 	lua_pushstring(L, path);
