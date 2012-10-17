@@ -99,8 +99,10 @@
 				entry.src_platform = platform
 				
 				-- PS3 is funky and needs special handling; it's more of a build
-				-- configuration than a platform from Visual Studio's point of view				
-				if platform ~= "PS3" then
+				-- configuration than a platform from Visual Studio's point of view.
+				-- This has been fixed in VS2010 as it now truly supports 3rd party
+				-- platforms, so only do this fixup when not in VS2010		
+				if platform ~= "PS3" or _ACTION > "vs2008" then
 					entry.buildcfg = buildcfg
 					entry.platform = vstudio.platforms[platform]
 				else
