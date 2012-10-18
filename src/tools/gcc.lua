@@ -147,7 +147,7 @@
 	
 		if cfg.kind == "SharedLib" then
 			if cfg.system == "macosx" then
-				result = table.join(result, { "-dynamiclib", "-flat_namespace" })
+				table.insert(result, "-dynamiclib")
 			else
 				table.insert(result, "-shared")
 			end
