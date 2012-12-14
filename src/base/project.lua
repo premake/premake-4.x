@@ -549,6 +549,7 @@
 		
 		for replacement,patterns in pairs(prj.vpaths) do
 			for _,pattern in ipairs(patterns) do
+
 				-- does the filename match this vpath pattern?
 				local i = vpath:find(path.wildcards(pattern))
 				if i == 1 then				
@@ -574,6 +575,8 @@
 						if stars == 0 then
 							leaf = path.getname(leaf)
 						end
+					else
+						leaf = path.getname(leaf)
 					end
 					
 					vpath = path.join(stem, leaf)
