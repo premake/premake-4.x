@@ -32,10 +32,10 @@
 	function suite.writesCorrectFlags()
 		cpp.flags(cfg, premake.gcc)
 		test.capture [[
-  CPPFLAGS  += -MMD -MP -I$(LIBOGC_INC) $(MACHDEP) -MP $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) 
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -s -L$(LIBOGC_LIB) $(MACHDEP)
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP -I$(LIBOGC_INC) $(MACHDEP) -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) 
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS) 
+  ALL_LDFLAGS   += $(LDFLAGS) -s -L$(LIBOGC_LIB) $(MACHDEP)
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   		]]
 	end

@@ -51,7 +51,7 @@
 		test.capture [[
   PCH        = include/myproject.h
   GCH        = $(OBJDIR)/myproject.h.gch
-  CPPFLAGS  += -I$(OBJDIR) -include $(OBJDIR)/myproject.h
+  ALL_CPPFLAGS  += -I$(OBJDIR) -include $(OBJDIR)/myproject.h
 		]]
 	end
 
@@ -73,7 +73,7 @@ ifeq (posix,$(SHELLTYPE))
 else
 	$(SILENT) xcopy /D /Y /Q "$(subst /,\,$<)" "$(subst /,\,$(OBJDIR))" 1>nul
 endif
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.gch=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) -o "$@" -MF $(@:%.gch=%.d) -c "$<"
 endif
 		]]
 	end
@@ -92,7 +92,7 @@ ifeq (posix,$(SHELLTYPE))
 else
 	$(SILENT) xcopy /D /Y /Q "$(subst /,\,$<)" "$(subst /,\,$(OBJDIR))" 1>nul
 endif
-	$(SILENT) $(CC) $(CFLAGS) -o "$@" -MF $(@:%.gch=%.d) -c "$<"
+	$(SILENT) $(CC) $(ALL_CFLAGS) -o "$@" -MF $(@:%.gch=%.d) -c "$<"
 endif
 		]]
 	end

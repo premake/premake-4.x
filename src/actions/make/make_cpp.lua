@@ -202,7 +202,7 @@
 			--  but had trouble linking to certain static libs so $(OBJECTS) moved up
 			-- then $(LDFLAGS) moved to end
 			--   https://sourceforge.net/tracker/?func=detail&aid=3430158&group_id=71616&atid=531880
-			_p('  LINKCMD    = $(%s) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(LIBS) $(LDFLAGS)', iif(cfg.language == "C", "CC", "CXX"))
+			_p('  LINKCMD    = $(%s) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(LIBS) $(ALL_LDFLAGS)', iif(cfg.language == "C", "CC", "CXX"))
 		end
 
 		_p('  define PREBUILDCMDS')
@@ -257,12 +257,12 @@
 --
 
 	function cpp.flags(cfg, cc)
-		_p('  CPPFLAGS  += %s $(DEFINES) $(INCLUDES)', table.concat(cc.getcppflags(cfg), " "))
-		_p('  CFLAGS    += $(CPPFLAGS) $(ARCH) %s', table.concat(table.join(cc.getcflags(cfg), cfg.buildoptions), " "))
-		_p('  CXXFLAGS  += $(CFLAGS) %s', table.concat(cc.getcxxflags(cfg), " "))
+		_p('  ALL_CPPFLAGS  += $(CPPFLAGS) %s $(DEFINES) $(INCLUDES)', table.concat(cc.getcppflags(cfg), " "))
+		_p('  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) %s', table.concat(table.join(cc.getcflags(cfg), cfg.buildoptions), " "))
+		_p('  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS) %s', table.concat(cc.getcxxflags(cfg), " "))
 
 		-- Patch #3401184 changed the order
-		_p('  LDFLAGS   += %s', table.concat(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions), " "))
+		_p('  ALL_LDFLAGS   += $(LDFLAGS) %s', table.concat(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions), " "))
 
 		_p('  RESFLAGS  += $(DEFINES) $(INCLUDES) %s',
 		        table.concat(table.join(cc.getdefines(cfg.resdefines),
@@ -290,7 +290,7 @@
 		if not cfg.flags.NoPCH and cfg.pchheader then
 			_p('  PCH        = %s', _MAKE.esc(path.getrelative(cfg.location, cfg.pchheader)))
 			_p('  GCH        = $(OBJDIR)/%s.gch', _MAKE.esc(path.getname(cfg.pchheader)))
-			_p('  CPPFLAGS  += -I$(OBJDIR) -include $(OBJDIR)/%s', _MAKE.esc(path.getname(cfg.pchheader)))
+			_p('  ALL_CPPFLAGS  += -I$(OBJDIR) -include $(OBJDIR)/%s', _MAKE.esc(path.getname(cfg.pchheader)))
 		end
 	end
 
@@ -314,6 +314,6 @@
 --
 
 	function cpp.buildcommand(iscfile, objext)
-		local flags = iif(iscfile, '$(CC) $(CFLAGS)', '$(CXX) $(CXXFLAGS)')
+		local flags = iif(iscfile, '$(CC) $(ALL_CFLAGS)', '$(CXX) $(ALL_CXXFLAGS)')
 		_p('\t$(SILENT) %s -o "$@" -MF $(@:%%.%s=%%.d) -c "$<"', flags, objext)
 	end
