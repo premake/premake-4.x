@@ -100,53 +100,39 @@
 		end
 	end
 
-	local function incremental_link(cfg,cfginfo)
-		if cfg.kind ~= "StaticLib" then
-			_p(2,'<LinkIncremental '..if_config_and_platform() ..'>%s</LinkIncremental>'
-					,premake.esc(cfginfo.name)
-					,tostring(premake.config.isincrementallink(cfg)))
-		end
-	end
-
-
-	local function ignore_import_lib(cfg,cfginfo)
-		if cfg.kind == "SharedLib" then
-			local shouldIgnore = "false"
-			if cfg.flags.NoImportLib then shouldIgnore = "true" end
-			 _p(2,'<IgnoreImportLibrary '..if_config_and_platform() ..'>%s</IgnoreImportLibrary>'
-					,premake.esc(cfginfo.name),shouldIgnore)
-		end
-	end
-
-
-	local function intermediate_and_out_dirs(prj)
-		_p(1,'<PropertyGroup>')
-			_p(2,'<_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>')
-
+	function vc2010.outputProperties(prj)
 			for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
 				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
-				_p(2,'<OutDir '..if_config_and_platform() ..'>%s\\</OutDir>'
-						, premake.esc(cfginfo.name),premake.esc(cfg.buildtarget.directory) )
+				local target = cfg.buildtarget
+
+				_p(1,'<PropertyGroup '..if_config_and_platform() ..'>', premake.esc(cfginfo.name))
+
+				_p(2,'<OutDir>%s\\</OutDir>', premake.esc(target.directory))
 
 				if cfg.platform == "Xbox360" then
-					_p(2,'<OutputFile '..if_config_and_platform() ..'>$(OutDir)%s</OutputFile>'
-							, premake.esc(cfginfo.name),cfg.buildtarget.name )
-				end						
-
-				_p(2,'<IntDir '..if_config_and_platform() ..'>%s\\</IntDir>'
-						, premake.esc(cfginfo.name), premake.esc(cfg.objectsdir))
-				_p(2,'<TargetName '..if_config_and_platform() ..'>%s</TargetName>'
-						,premake.esc(cfginfo.name),path.getbasename(cfg.buildtarget.name))
-
-				ignore_import_lib(cfg,cfginfo)
-				incremental_link(cfg,cfginfo)
-				if cfg.flags.NoManifest then
-				_p(2,'<GenerateManifest '..if_config_and_platform() ..'>false</GenerateManifest>'
-						,premake.esc(cfginfo.name))
+					_p(2,'<OutputFile>$(OutDir)%s</OutputFile>', premake.esc(target.name))
 				end
+
+				_p(2,'<IntDir>%s\\</IntDir>', premake.esc(cfg.objectsdir))
+				_p(2,'<TargetName>%s</TargetName>', premake.esc(path.getbasename(target.name)))
+				_p(2,'<TargetExt>%s</TargetExt>', premake.esc(path.getextension(target.name)))
+
+				if cfg.kind == "SharedLib" then
+					local ignore = (cfg.flags.NoImportLib ~= nil)
+					 _p(2,'<IgnoreImportLibrary>%s</IgnoreImportLibrary>', tostring(ignore))
+				end
+
+				if cfg.kind ~= "StaticLib" then
+					_p(2,'<LinkIncremental>%s</LinkIncremental>', tostring(premake.config.isincrementallink(cfg)))
+				end
+
+				if cfg.flags.NoManifest then
+					_p(2,'<GenerateManifest>false</GenerateManifest>')
+				end
+
+				_p(1,'</PropertyGroup>')
 			end
 
-		_p(1,'</PropertyGroup>')
 	end
 
 	local function runtime(cfg)
@@ -593,7 +579,7 @@
 			--what type of macros are these?
 			_p(1,'<PropertyGroup Label="UserMacros" />')
 
-			intermediate_and_out_dirs(prj)
+			vc2010.outputProperties(prj)
 
 			item_definitions(prj)
 

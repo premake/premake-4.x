@@ -117,20 +117,6 @@
 		test.string_contains(buffer,'<PropertyGroup Label="UserMacros" />')
 	end
 
-	function vs10_vcxproj.intermediateAndOutDirsPropertyGroupWithMagicNumber()
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<PropertyGroup>.*<_ProjectFileVersion>10%.0%.30319%.1</_ProjectFileVersion>')
-	end
-
-	function vs10_vcxproj.outDirPresent()
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<OutDir.*</OutDir>')
-	end
-	function vs10_vcxproj.initDirPresent()
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<IntDir.*</IntDir>')
-	end
-
 	function vs10_vcxproj.projectWithDebugAndReleaseConfig_twoOutDirsAndTwoIntDirs()
 		local buffer = get_buffer()
 		test.string_contains(buffer,'<OutDir.*</OutDir>.*<IntDir.*</IntDir>.*<OutDir.*</OutDir>.*<IntDir.*</IntDir>')
@@ -231,52 +217,6 @@
 		postbuildcommands { "\"doSomeThing\"" }
 		local buffer = get_buffer()
 		test.string_contains(buffer,'<PostBuildEvent>.*<Command>&quot;doSomeThing&quot;</Command>.*</PostBuildEvent>')
-	end
-
-	function vs10_vcxproj.outDir_directorySuppliedIsNotSlashPostFixed_bufferContainsOutDirSlashPostFixed()
-		targetdir("dir")
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<OutDir Condition="\'%$%(Configuration%)|%$%(Platform%)\'==\.*\'">dir\\</OutDir>')
-	end
-	--postfixed directory slashes are removed by default
-	--yet these following two tests are to ensure if this behaviour is changed they will fail
-	function vs10_vcxproj.outDir_directorySuppliedWhichIsForwardSlashPostFixed_bufferContainsOutDirSlashPostFixed()
-		targetdir("dir/")
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<OutDir Condition="\'%$%(Configuration%)|%$%(Platform%)\'==\.*\'">dir\\</OutDir>')
-	end
-
-	function vs10_vcxproj.outDir_directorySuppliedWhichIsWindowsSlashPostFixed_bufferContainsOutDirSlashPostFixed()
-		targetdir("dir\\")
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<OutDir Condition="\'%$%(Configuration%)|%$%(Platform%)\'==\.*\'">dir\\</OutDir>')
-	end
-
-	function vs10_vcxproj.objectDir_directorySuppliedIsNotSlashPostFixed_bufferContainsIntermediateDirSlashPostFixed()
-		objdir ("dir")
-
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<IntDir Condition="\'%$%(Configuration%)|%$%(Platform%)\'==\'.*\'">dir\\</IntDir>')
-	end
-
-	--postfixed directory slashes are removed by default
-	--yet these following two tests are to ensure if this behaviour is changed they will fail
-	function vs10_vcxproj.objectDir_directorySuppliedWhichIsSlashPostFixed_bufferContainsIntermediateDirSlashPostFixed()
-		objdir ("dir/")
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<IntDir Condition="\'%$%(Configuration%)|%$%(Platform%)\'==\'.*\'">dir\\</IntDir>')
-	end
-
-	function vs10_vcxproj.objectDir_directorySuppliedWhichIsWindowsSlashPostFixed_bufferContainsIntermediateDirSlashPostFixed()
-		objdir ("dir\\")
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<IntDir Condition="\'%$%(Configuration%)|%$%(Platform%)\'==\'.*\'">dir\\</IntDir>')
-	end
-	function vs10_vcxproj.targetName()
-		configuration("Debug")
-		targetname ("foo_d")
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<TargetName Condition="\'%$%(Configuration%)|%$%(Platform%)\'==\'Debug|Win32\'">foo_d</TargetName>')
 	end
 
 	function vs10_vcxproj.noExtraWarnings_bufferDoesNotContainSmallerTypeCheck()

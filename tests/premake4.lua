@@ -110,6 +110,7 @@
 	dofile("actions/vstudio/vc2010/test_link_settings.lua")
 	dofile("actions/vstudio/vc2010/test_links.lua")
 	dofile("actions/vstudio/vc2010/test_mfc.lua")
+	dofile("actions/vstudio/vc2010/test_output_props.lua")
 	dofile("actions/vstudio/vc2010/test_pch.lua")
 	dofile("actions/vstudio/vc2010/test_project_refs.lua")
 
@@ -142,15 +143,27 @@
 -- Register a test action
 --
 
+	newoption {
+		trigger     = "test",
+		description = "A suite or test to run"
+	}
+
 	newaction {
 		trigger     = "test",
 		description = "Run the automated test suite",
 
 		execute = function ()
-			passed, failed = test.runall()
+			if _OPTIONS["test"] then
+				local t = string.explode(_OPTIONS["test"] or "", ".", true)
+				passed, failed = test.runall(t[1], t[2])
+			else
+				passed, failed = test.runall()
+			end
+
 			msg = string.format("%d tests passed, %d failed", passed, failed)
 			if (failed > 0) then
-				error(msg, 0)
+				-- should probably return an error code here somehow
+				print(msg)
 			else
 				print(msg)
 			end

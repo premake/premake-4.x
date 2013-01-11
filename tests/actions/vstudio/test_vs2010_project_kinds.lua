@@ -65,51 +65,6 @@
 		test.string_contains(buffer,'<Link>.*<ImportLibrary>.*</ImportLibrary>.*</Link>')
 	end
 
-	function vs10_project_kinds.sharedLib_bufferContainsImportLibrary()
-		kind "SharedLib"
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<Link>.*<ImportLibrary>MyProject.lib</ImportLibrary>.*</Link>')
-	end
-
-	function vs10_project_kinds.sharedLib_withNoImportLibraryFlag_linkSectionContainsImportLibrary()
-		kind "SharedLib"
-		flags{"NoImportLib"}
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<Link>.*<ImportLibrary>.*</ImportLibrary>.*</Link>')
-	end
-
-	function vs10_project_kinds.sharedLib_withOutNoImportLibraryFlag_propertyGroupSectionContainsIgnoreImportLibrary()
-		kind "SharedLib"
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<PropertyGroup>.*<IgnoreImportLibrary.*</IgnoreImportLibrary>.*</PropertyGroup>')
-	end
-
-	function vs10_project_kinds.sharedLib_withNoImportLibraryFlag_propertyGroupSectionContainsIgnoreImportLibrary()
-		kind "SharedLib"
-		flags{"NoImportLib"}
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<PropertyGroup>.*<IgnoreImportLibrary.*</IgnoreImportLibrary>.*</PropertyGroup>')
-	end
-
-	function vs10_project_kinds.sharedLib_withOutNoImportLibraryFlag_ignoreImportLibraryValueIsFalse()
-		kind "SharedLib"
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<PropertyGroup>.*<IgnoreImportLibrary.*false</IgnoreImportLibrary>.*</PropertyGroup>')
-	end
-
-	function vs10_project_kinds.sharedLib_withNoImportLibraryFlag_ignoreImportLibraryValueIsTrue()
-		kind "SharedLib"
-		flags{"NoImportLib"}
-		local buffer = get_buffer()
-		test.string_contains(buffer,'<PropertyGroup>.*<IgnoreImportLibrary.*true</IgnoreImportLibrary>.*</PropertyGroup>')
-	end
-
-	function vs10_project_kinds.staticLib_doesNotContainLinkIncremental()
-		kind "StaticLib"
-		local buffer = get_buffer()
-		test.string_does_not_contain(buffer,'<LinkIncremental.*</LinkIncremental>')
-	end
-
 	function vs10_project_kinds.sharedLib_withoutOptimisation_linkIncrementalValueIsTrue()
 		kind "SharedLib"
 		local buffer = get_buffer()
