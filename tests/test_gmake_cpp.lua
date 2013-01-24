@@ -18,16 +18,16 @@
 		sln = solution "MySolution"
 		configurations { "Debug", "Release" }
 		platforms { "native" }
-		
+
 		prj = project "MyProject"
 		language "C++"
-		kind "ConsoleApp"		
+		kind "ConsoleApp"
 	end
 
 	local function prepare()
 		premake.bake.buildconfigs()
 	end
-	
+
 
 
 --
@@ -60,9 +60,9 @@ ifndef RESCOMP
 endif
 		]]
 	end
-	
-	
-	
+
+
+
 --
 -- Test configuration blocks
 --
@@ -76,15 +76,15 @@ ifeq ($(config),debug)
   OBJDIR     = obj/Debug
   TARGETDIR  = .
   TARGET     = $(TARGETDIR)/MyProject
-  DEFINES   += 
-  INCLUDES  += 
+  DEFINES   +=
+  INCLUDES  +=
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) 
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS) 
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -s
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
-  LIBS      += 
-  LDDEPS    += 
+  LIBS      +=
+  LDDEPS    +=
   LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(LIBS) $(ALL_LDFLAGS)
   define PREBUILDCMDS
   endef
@@ -95,7 +95,7 @@ ifeq ($(config),debug)
 endif
 		]]
 	end
-	
+
 
 	function T.gmake_cpp.BasicCfgBlockWithPlatformCc()
 		platforms { "ps3" }
@@ -110,15 +110,15 @@ ifeq ($(config),debugps3)
   OBJDIR     = obj/PS3/Debug
   TARGETDIR  = .
   TARGET     = $(TARGETDIR)/MyProject.elf
-  DEFINES   += 
-  INCLUDES  += 
+  DEFINES   +=
+  INCLUDES  +=
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) 
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS) 
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -s
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
-  LIBS      += 
-  LDDEPS    += 
+  LIBS      +=
+  LDDEPS    +=
   LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(LIBS) $(ALL_LDFLAGS)
   define PREBUILDCMDS
   endef
@@ -141,15 +141,15 @@ ifeq ($(config),debug64)
   OBJDIR     = obj/x64/Debug
   TARGETDIR  = .
   TARGET     = $(TARGETDIR)/MyProject
-  DEFINES   += 
-  INCLUDES  += 
+  DEFINES   +=
+  INCLUDES  +=
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -m64
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS) 
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -s -m64 -L/usr/lib64
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
-  LIBS      += 
-  LDDEPS    += 
+  LIBS      +=
+  LDDEPS    +=
   LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(LIBS) $(ALL_LDFLAGS)
   define PREBUILDCMDS
   endef
@@ -173,15 +173,15 @@ ifeq ($(config),debuguniv32)
   OBJDIR     = obj/Universal32/Debug
   TARGETDIR  = .
   TARGET     = $(TARGETDIR)/libMyProject.a
-  DEFINES   += 
-  INCLUDES  += 
+  DEFINES   +=
+  INCLUDES  +=
   ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
   ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -arch i386 -arch ppc
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS) 
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -s -arch i386 -arch ppc
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
-  LIBS      += 
-  LDDEPS    += 
+  LIBS      +=
+  LDDEPS    +=
   LINKCMD    = libtool -o $(TARGET) $(OBJECTS)
   define PREBUILDCMDS
   endef

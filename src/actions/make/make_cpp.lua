@@ -154,7 +154,7 @@
 		_p('CXX = %s', cc.cxx)
 		_p('AR = %s', cc.ar)
 		_p('')
-		
+
 		_p('ifndef RESCOMP')
 		_p('  ifdef WINDRES')
 		_p('    RESCOMP = $(WINDRES)')
@@ -162,7 +162,7 @@
 		_p('    RESCOMP = windres')
 		_p('  endif')
 		_p('endif')
-		_p('')	
+		_p('')
 	end
 
 --
@@ -179,31 +179,17 @@
 		_p('  OBJDIR     = %s', _MAKE.esc(cfg.objectsdir))
 		_p('  TARGETDIR  = %s', _MAKE.esc(cfg.buildtarget.directory))
 		_p('  TARGET     = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
-		_p('  DEFINES   += %s', table.concat(cc.getdefines(cfg.defines), " "))
-		_p('  INCLUDES  += %s', table.concat(cc.getincludedirs(cfg.includedirs), " "))
+		_p('  DEFINES   +=%s', make.list(cc.getdefines(cfg.defines)))
+		_p('  INCLUDES  +=%s', make.list(cc.getincludedirs(cfg.includedirs)))
 
-		-- CPPFLAGS, CFLAGS, CXXFLAGS, LDFLAGS, and RESFLAGS
+		-- CPPFLAGS, CFLAGS, CXXFLAGS, and RESFLAGS
 		cpp.flags(cfg, cc)
+
+		-- write out libraries, linker flags, and the link command
+		cpp.linker(cfg, cc)
 
 		-- set up precompiled headers
 		cpp.pchconfig(cfg)
-
-		_p('  LIBS      += %s', table.concat(cc.getlinkflags(cfg), " "))
-		_p('  LDDEPS    += %s', table.concat(_MAKE.esc(premake.getlinks(cfg, "siblings", "fullpath")), " "))
-
-		if cfg.kind == "StaticLib" then
-			if cfg.platform:startswith("Universal") then
-				_p('  LINKCMD    = libtool -o $(TARGET) $(OBJECTS)')
-			else
-				_p('  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)')
-			end
-		else
-			-- this was $(TARGET) $(LDFLAGS) $(OBJECTS)
-			--  but had trouble linking to certain static libs so $(OBJECTS) moved up
-			-- then $(LDFLAGS) moved to end
-			--   https://sourceforge.net/tracker/?func=detail&aid=3430158&group_id=71616&atid=531880
-			_p('  LINKCMD    = $(%s) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(LIBS) $(ALL_LDFLAGS)', iif(cfg.language == "C", "CC", "CXX"))
-		end
 
 		_p('  define PREBUILDCMDS')
 		if #cfg.prebuildcommands > 0 then
@@ -258,15 +244,40 @@
 
 	function cpp.flags(cfg, cc)
 		_p('  ALL_CPPFLAGS  += $(CPPFLAGS) %s $(DEFINES) $(INCLUDES)', table.concat(cc.getcppflags(cfg), " "))
-		_p('  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) %s', table.concat(table.join(cc.getcflags(cfg), cfg.buildoptions), " "))
-		_p('  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS) %s', table.concat(cc.getcxxflags(cfg), " "))
+		_p('  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cfg.buildoptions)))
+		_p('  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)%s', make.list(cc.getcxxflags(cfg)))
 
+		_p('  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)%s',
+		        make.list(table.join(cc.getdefines(cfg.resdefines),
+		                                cc.getincludedirs(cfg.resincludedirs), cfg.resoptions)))
+	end
+
+
+--
+-- Linker settings, including the libraries to link, the linker flags,
+-- and the linker command.
+--
+
+	function cpp.linker(cfg, cc)
 		-- Patch #3401184 changed the order
-		_p('  ALL_LDFLAGS   += $(LDFLAGS) %s', table.concat(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions), " "))
+		_p('  ALL_LDFLAGS   += $(LDFLAGS)%s', make.list(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions)))
 
-		_p('  RESFLAGS  += $(DEFINES) $(INCLUDES) %s',
-		        table.concat(table.join(cc.getdefines(cfg.resdefines),
-		                                cc.getincludedirs(cfg.resincludedirs), cfg.resoptions), " "))
+		_p('  LIBS      +=%s', make.list(cc.getlinkflags(cfg)))
+		_p('  LDDEPS    +=%s', make.list(_MAKE.esc(premake.getlinks(cfg, "siblings", "fullpath"))))
+
+		if cfg.kind == "StaticLib" then
+			if cfg.platform:startswith("Universal") then
+				_p('  LINKCMD    = libtool -o $(TARGET) $(OBJECTS)')
+			else
+				_p('  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)')
+			end
+		else
+			-- this was $(TARGET) $(LDFLAGS) $(OBJECTS)
+			--  but had trouble linking to certain static libs so $(OBJECTS) moved up
+			-- then $(LDFLAGS) moved to end
+			--   https://sourceforge.net/tracker/?func=detail&aid=3430158&group_id=71616&atid=531880
+			_p('  LINKCMD    = $(%s) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(LIBS) $(ALL_LDFLAGS)', iif(cfg.language == "C", "CC", "CXX"))
+		end
 	end
 
 
