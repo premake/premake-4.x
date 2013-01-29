@@ -106,3 +106,20 @@
 		]]
 	end
 
+
+--
+-- When referencing an external library via a path, the directory
+-- should be added to the library search paths, and the library
+-- itself included via an -l flag.
+--
+
+ function suite.onExternalLibraryWithPath()
+ 	location "MyProject"
+	links { "libs/SomeLib" }
+	prepare()
+	test.capture [[
+  ALL_LDFLAGS   += $(LDFLAGS) -L../libs -s
+  LIBS      += -lSomeLib
+  LDDEPS    +=
+	]]
+ end

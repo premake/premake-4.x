@@ -4,9 +4,9 @@
 -- Copyright (c) 2002-2011 Jason Perkins and the Premake project
 --
 
-	
+
 	premake.gcc = { }
-	
+
 
 --
 -- Set default tools
@@ -15,8 +15,8 @@
 	premake.gcc.cc     = "gcc"
 	premake.gcc.cxx    = "g++"
 	premake.gcc.ar     = "ar"
-	
-	
+
+
 --
 -- Translation of Premake flags into GCC flags
 --
@@ -41,36 +41,36 @@
 		NoExceptions   = "-fno-exceptions",
 		NoRTTI         = "-fno-rtti",
 	}
-	
-	
+
+
 --
 -- Map platforms to flags
 --
 
-	premake.gcc.platforms = 
+	premake.gcc.platforms =
 	{
-		Native = { 
+		Native = {
 			cppflags = "-MMD",
 		},
-		x32 = { 
-			cppflags = "-MMD",	
+		x32 = {
+			cppflags = "-MMD",
 			flags    = "-m32",
-			ldflags  = "-L/usr/lib32", 
+			ldflags  = "-L/usr/lib32",
 		},
-		x64 = { 
+		x64 = {
 			cppflags = "-MMD",
 			flags    = "-m64",
 			ldflags  = "-L/usr/lib64",
 		},
-		Universal = { 
+		Universal = {
 			cppflags = "",
 			flags    = "-arch i386 -arch x86_64 -arch ppc -arch ppc64",
 		},
-		Universal32 = { 
+		Universal32 = {
 			cppflags = "",
 			flags    = "-arch i386 -arch ppc",
 		},
-		Universal64 = { 
+		Universal64 = {
 			cppflags = "",
 			flags    = "-arch x86_64 -arch ppc64",
 		},
@@ -92,7 +92,7 @@
 	}
 
 	local platforms = premake.gcc.platforms
-	
+
 
 --
 -- Returns a list of compiler flags, based on the supplied configuration.
@@ -103,7 +103,7 @@
 		table.insert(flags, platforms[cfg.platform].cppflags)
 
 		-- We want the -MP flag for dependency generation (creates phony rules
-		-- for headers, prevents make errors if file is later deleted), but 
+		-- for headers, prevents make errors if file is later deleted), but
 		-- Haiku doesn't support it (yet)
 		if flags[1]:startswith("-MMD") and cfg.system ~= "haiku" then
 			table.insert(flags, "-MP")
@@ -119,23 +119,23 @@
 		if cfg.system ~= "windows" and cfg.kind == "SharedLib" then
 			table.insert(result, "-fPIC")
 		end
-		return result		
+		return result
 	end
-	
+
 
 	function premake.gcc.getcxxflags(cfg)
 		local result = table.translate(cfg.flags, cxxflags)
 		return result
 	end
 
-	
+
 --
 -- Returns a list of linker flags, based on the supplied configuration.
 --
 
 	function premake.gcc.getldflags(cfg)
 		local result = { }
-		
+
 		-- OS X has a bug, see http://lists.apple.com/archives/Darwin-dev/2006/Sep/msg00084.html
 		if not cfg.flags.Symbols then
 			if cfg.system == "macosx" then
@@ -144,14 +144,14 @@
 				table.insert(result, "-s")
 			end
 		end
-	
+
 		if cfg.kind == "SharedLib" then
 			if cfg.system == "macosx" then
 				table.insert(result, "-dynamiclib")
 			else
 				table.insert(result, "-shared")
 			end
-				
+
 			if cfg.system == "windows" and not cfg.flags.NoImportLib then
 				table.insert(result, '-Wl,--out-implib="' .. cfg.linktarget.fullpath .. '"')
 			end
@@ -160,18 +160,18 @@
 		if cfg.kind == "WindowedApp" and cfg.system == "windows" then
 			table.insert(result, "-mwindows")
 		end
-		
+
 		local platform = platforms[cfg.platform]
 		table.insert(result, platform.flags)
 		table.insert(result, platform.ldflags)
-		
+
 		return result
 	end
-		
+
 
 --
 -- Return a list of library search paths. Technically part of LDFLAGS but need to
--- be separated because of the way Visual Studio calls GCC for the PS3. See bug 
+-- be separated because of the way Visual Studio calls GCC for the PS3. See bug
 -- #1729227 for background on why library paths must be split.
 --
 
@@ -182,7 +182,7 @@
 		end
 		return result
 	end
-	
+
 
 
 --
@@ -211,7 +211,7 @@
 		end
 
 		-- "-llib" is fine for system dependencies
-		for _, value in ipairs(premake.getlinks(cfg, "system", "basename")) do
+		for _, value in ipairs(premake.getlinks(cfg, "system", "name")) do
 			if path.getextension(value) == ".framework" then
 				table.insert(result, '-framework ' .. _MAKE.esc(path.getbasename(value)))
 			else
@@ -220,8 +220,8 @@
 		end
 		return result
 	end
-	
-	
+
+
 
 --
 -- Decorate defines for the GCC command line.
@@ -236,7 +236,7 @@
 	end
 
 
-	
+
 --
 -- Decorate include file search paths for the GCC command line.
 --
@@ -250,10 +250,10 @@
 	end
 
 
--- 
+--
 -- Return platform specific project and configuration level
 -- makesettings blocks.
---	
+--
 
 	function premake.gcc.getcfgsettings(cfg)
 		return platforms[cfg.platform].cfgsettings
