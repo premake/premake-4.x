@@ -403,6 +403,12 @@
 			end
 
 			import_lib(cfg)
+
+			local deffile = premake.findfile(cfg, ".def")
+			if deffile then
+				_p(3,'<ModuleDefinitionFile>%s</ModuleDefinitionFile>', deffile)
+			end
+
 			link_target_machine(3,cfg)
 			additional_options(3,cfg)
 		end

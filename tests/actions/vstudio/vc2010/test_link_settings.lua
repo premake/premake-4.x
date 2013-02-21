@@ -208,3 +208,22 @@
 		</Link>
 		]]
 	end
+
+
+--
+-- Correctly handle module definition (.def) files.
+--
+
+	function suite.recognizesModuleDefinitionFile()
+		files { "hello.cpp", "hello.def" }
+		prepare()
+		test.capture [[
+		<Link>
+			<SubSystem>Console</SubSystem>
+			<GenerateDebugInformation>false</GenerateDebugInformation>
+			<OutputFile>$(OutDir)MyProject.exe</OutputFile>
+			<EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+			<ModuleDefinitionFile>hello.def</ModuleDefinitionFile>
+		</Link>
+		]]
+	end
