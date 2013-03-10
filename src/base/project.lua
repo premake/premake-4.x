@@ -253,6 +253,25 @@
 
 
 --
+-- Uses a pattern to format the basename of a file (i.e. without path).
+--
+-- @param prjname
+--    A project name (string) to use.
+-- @param pattern
+--    A naming pattern. The sequence "%%" will be replaced by the
+--    project name.
+-- @returns
+--    A filename (basename only) matching the specified pattern, without
+--    path components.
+--
+
+	function premake.project.getbasename(prjname, pattern)
+		return pattern:gsub("%%%%", prjname)
+	end
+
+
+
+--
 -- Uses information from a project (or solution) to format a filename.
 --
 -- @param prj
@@ -266,7 +285,7 @@
 --
 
 	function premake.project.getfilename(prj, pattern)
-		local fname = pattern:gsub("%%%%", prj.name)
+		local fname = premake.project.getbasename(prj.name, pattern)
 		fname = path.join(prj.location, fname)
 		return path.getrelative(os.getcwd(), fname)
 	end
