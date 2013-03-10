@@ -83,6 +83,10 @@
 			_p(2,'<UseOfMfc>%s</UseOfMfc>', iif(cfg.flags.StaticRuntime, "Static", "Dynamic"))
 		end
 
+		if cfg.flags.ATL or cfg.flags.StaticATL then
+			_p(2,'<UseOfAtl>%s</UseOfAtl>', iif(cfg.flags.StaticATL, "Static", "Dynamic"))
+		end
+
 		if cfg.flags.Managed then
 			_p(2,'<CLRSupport>true</CLRSupport>')
 		end
