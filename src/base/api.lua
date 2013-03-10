@@ -94,6 +94,7 @@
 			allowed = function(value)
 			
 				local allowed_flags = {
+					ATL = 1,
 					DebugEnvsDontMerge = 1,
 					DebugEnvsInherit = 1,
 					EnableSSE = 1,
@@ -120,6 +121,7 @@
 					OptimizeSize = 1,
 					OptimizeSpeed = 1,
 					SEH = 1,
+					StaticATL = 1,
 					StaticRuntime = 1,
 					Symbols = 1,
 					Unicode = 1,

@@ -1,6 +1,6 @@
 --
 -- tests/actions/vstudio/vc200x/test_mfc.lua
--- Validate MFC support in Visual Studio 200x C/C++ projects.
+-- Validate ATL/MFC support in Visual Studio 200x C/C++ projects.
 -- Copyright (c) 2011 Jason Perkins and the Premake project
 --
 
@@ -58,6 +58,40 @@
 			IntermediateDirectory="obj\Debug"
 			ConfigurationType="1"
 			UseOfMFC="1"
+			CharacterSet="2"
+			>
+		]]
+	end
+
+--
+-- Same as above for ATL.
+--
+
+	function suite.useOfAtl_isDynamic_onSharedRuntime()
+		flags { "ATL" }
+		prepare()
+		test.capture [[
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="obj\Debug"
+			ConfigurationType="1"
+			UseOfATL="2"
+			CharacterSet="2"
+			>
+		]]
+	end
+	
+	function suite.useOfAtl_isStatic_onStaticRuntime()	
+		flags { "StaticATL" }
+		prepare()
+		test.capture [[
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="obj\Debug"
+			ConfigurationType="1"
+			UseOfATL="1"
 			CharacterSet="2"
 			>
 		]]
