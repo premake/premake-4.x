@@ -170,15 +170,16 @@
 --
 
 	function vstudio.projectfile(prj)
-		local extension
+		local pattern
 		if prj.language == "C#" then
-			extension = ".csproj"
+			pattern = "%%.csproj"
 		else
-			extension = iif(_ACTION > "vs2008", ".vcxproj", ".vcproj")
+			pattern = iif(_ACTION > "vs2008", "%%.vcxproj", "%%.vcproj")
 		end
 
-		local fname = path.join(prj.location, prj.name)
-		return fname..extension
+		local fname = premake.project.getbasename(prj.name, pattern)
+		fname = path.join(prj.location, fname)
+		return fname
 	end
 	
 
