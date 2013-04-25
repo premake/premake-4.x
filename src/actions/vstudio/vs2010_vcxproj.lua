@@ -79,6 +79,10 @@
 		_p(2,'<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
 		_p(2,'<CharacterSet>%s</CharacterSet>',iif(cfg.flags.Unicode,"Unicode","MultiByte"))
 
+		if _ACTION > "vs2010" then
+			_p(2,'<PlatformToolset>%s</PlatformToolset>', "v110")
+		end
+
 		if cfg.flags.MFC then
 			_p(2,'<UseOfMfc>%s</UseOfMfc>', iif(cfg.flags.StaticRuntime, "Static", "Dynamic"))
 		end

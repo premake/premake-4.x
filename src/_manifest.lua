@@ -33,23 +33,23 @@
 		"base/validate.lua",
 		"base/help.lua",
 		"base/premake.lua",
-		
+
 		-- CodeBlocks action
 		"actions/codeblocks/_codeblocks.lua",
 		"actions/codeblocks/codeblocks_workspace.lua",
 		"actions/codeblocks/codeblocks_cbp.lua",
-		
+
 		-- CodeLite action
 		"actions/codelite/_codelite.lua",
 		"actions/codelite/codelite_workspace.lua",
 		"actions/codelite/codelite_project.lua",
-		
+
 		-- GNU make action
 		"actions/make/_make.lua",
 		"actions/make/make_solution.lua",
 		"actions/make/make_cpp.lua",
 		"actions/make/make_csharp.lua",
-		
+
 		-- Visual Studio actions
 		"actions/vstudio/_vstudio.lua",
 		"actions/vstudio/vs2002_solution.lua",
@@ -63,15 +63,16 @@
 		"actions/vstudio/vs2005_csproj_user.lua",
 		"actions/vstudio/vs2010_vcxproj.lua",
 		"actions/vstudio/vs2010_vcxproj_filters.lua",
-		
+		"actions/vstudio/vs2012.lua",
+
 		-- Xcode action
 		"actions/xcode/_xcode.lua",
 		"actions/xcode/xcode_common.lua",
 		"actions/xcode/xcode_project.lua",
-		
+
 		-- Xcode4 action
 		"actions/xcode/xcode4_workspace.lua",
-		
+
 		-- Clean action
 		"actions/clean/_clean.lua",
 	}

@@ -10,17 +10,17 @@
 
 
 --
--- Setup 
+-- Setup
 --
 
 	local sln, prj
-	
+
 	function suite.setup()
 		sln = test.createsolution()
 		language "C#"
-		uuid "AE61726D-187C-E440-BD07-2556188A6565"		
+		uuid "AE61726D-187C-E440-BD07-2556188A6565"
 	end
-	
+
 	local function prepare()
 		premake.bake.buildconfigs()
 		prj = premake.solution.getproject(sln, 1)
@@ -85,7 +85,26 @@
     <RootNamespace>MyProject</RootNamespace>
     <AssemblyName>MyProject</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+		]]
+	end
+
+
+	function suite.OnVs2012()
+		_ACTION = "vs2012"
+		prepare()
+		test.capture [[
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AE61726D-187C-E440-BD07-2556188A6565}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MyProject</RootNamespace>
+    <AssemblyName>MyProject</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
 		]]

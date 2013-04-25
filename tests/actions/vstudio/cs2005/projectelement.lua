@@ -10,15 +10,15 @@
 
 
 --
--- Setup 
+-- Setup
 --
 
 	local sln, prj
-	
+
 	function suite.setup()
 		sln = test.createsolution()
 	end
-	
+
 	local function prepare()
 		premake.bake.buildconfigs()
 		prj = premake.solution.getproject(sln, 1)
@@ -48,6 +48,15 @@
 
 	function suite.On2010()
 		_ACTION = "vs2010"
+		prepare()
+		test.capture [[
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		]]
+	end
+
+	function suite.On2012()
+		_ACTION = "vs2012"
 		prepare()
 		test.capture [[
 <?xml version="1.0" encoding="utf-8"?>

@@ -10,15 +10,15 @@
 
 
 --
--- Setup 
+-- Setup
 --
 
 	local sln, prj
-	
+
 	function suite.setup()
 		sln = test.createsolution()
 	end
-	
+
 	local function prepare()
 		premake.bake.buildconfigs()
 		sln2005.header()
@@ -55,5 +55,15 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 		test.capture [[
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+		]]
+	end
+
+
+	function suite.On2012()
+		_ACTION = "vs2012"
+		prepare()
+		test.capture [[
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 		]]
 	end

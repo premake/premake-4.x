@@ -7,14 +7,14 @@
 	premake.vstudio.sln2005 = { }
 	local vstudio = premake.vstudio
 	local sln2005 = premake.vstudio.sln2005
-	
+
 
 	function sln2005.generate(sln)
 		io.eol = '\r\n'
 
 		-- Precompute Visual Studio configurations
 		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
-		
+
 		-- Mark the file as Unicode
 		_p('\239\187\191')
 
@@ -37,13 +37,8 @@
 --
 
 	function sln2005.header(sln)
-		local version = {
-			vs2005 = 9,
-			vs2008 = 10,
-			vs2010 = 11
-		}
-
-		_p('Microsoft Visual Studio Solution File, Format Version %d.00', version[_ACTION])
+		local action = premake.action.current()
+		_p('Microsoft Visual Studio Solution File, Format Version %d.00', action.vstudio.solutionVersion)
 		_p('# Visual Studio %s', _ACTION:sub(3))
 	end
 
@@ -55,7 +50,7 @@
 	function sln2005.project(prj)
 		-- Build a relative path from the solution file to the project file
 		local projpath = path.translate(path.getrelative(prj.solution.location, vstudio.projectfile(prj)), "\\")
-			
+
 		_p('Project("{%s}") = "%s", "%s", "{%s}"', vstudio.tool(prj), prj.name, projpath, prj.uuid)
 		sln2005.projectdependencies(prj)
 		_p('EndProject')
@@ -90,8 +85,8 @@
 		end
 		_p('\tEndGlobalSection')
 	end
-	
-	
+
+
 
 --
 -- Write out the contents of the ProjectConfigurationPlatforms section, which maps
@@ -102,8 +97,8 @@
 		_p('\tGlobalSection(ProjectConfigurationPlatforms) = postSolution')
 		for prj in premake.solution.eachproject(sln) do
 			for _, cfg in ipairs(sln.vstudio_configs) do
-			
-				-- .NET projects always map to the "Any CPU" platform (for now, at 
+
+				-- .NET projects always map to the "Any CPU" platform (for now, at
 				-- least). For C++, "Any CPU" and "Mixed Platforms" map to the first
 				-- C++ compatible target platform in the solution list.
 				local mapped
@@ -125,14 +120,14 @@
 		end
 		_p('\tEndGlobalSection')
 	end
-	
-	
+
+
 
 --
 -- Write out contents of the SolutionProperties section; currently unused.
 --
 
-	function sln2005.properties(sln)	
+	function sln2005.properties(sln)
 		_p('\tGlobalSection(SolutionProperties) = preSolution')
 		_p('\t\tHideSolutionNode = FALSE')
 		_p('\tEndGlobalSection')

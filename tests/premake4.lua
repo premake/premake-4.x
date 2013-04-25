@@ -103,6 +103,7 @@
 	dofile("actions/vstudio/vc200x/test_mfc.lua")
 
 	-- Visual Studio 2010 C/C++ projects
+	dofile("actions/vstudio/vc2010/test_config_props.lua")
 	dofile("actions/vstudio/vc2010/test_debugdir.lua")
 	dofile("actions/vstudio/vc2010/test_header.lua")
 	dofile("actions/vstudio/vc2010/test_files.lua")
