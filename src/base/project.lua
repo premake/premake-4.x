@@ -479,7 +479,11 @@
 		end
 
 		-- Initialize the target components
-		local field   = iif(direction == "build", "target", "implib")
+		local field   = "build"
+		if direction == "link" and cfg.kind == "SharedLib" then
+			field = "implib"
+		end
+
 		local name    = cfg[field.."name"] or cfg.targetname or cfg.project.name
 		local dir     = cfg[field.."dir"] or cfg.targetdir or path.getrelative(cfg.location, cfg.basedir)
 		local prefix  = ""

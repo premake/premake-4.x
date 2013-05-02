@@ -5,7 +5,7 @@
 --
 
 	T.targets = { }
-	
+
 	local cfg
 	function T.targets.setup()
 		cfg = { }
@@ -95,7 +95,7 @@
 		result = premake.gettarget(cfg, "build", "posix", "posix", "macosx")
 		test.isequal([[../bin/MyProject.app/Contents/MacOS/MyProject]], result.fullpath)
 	end
-	
+
 	function T.targets.WindowedApp_Build_PS3Names()
 		cfg.kind = "WindowedApp"
 		result = premake.gettarget(cfg, "build", "posix", "PS3", "macosx")
@@ -218,6 +218,13 @@
 	function T.targets.StaticLib_Link_PosixNames_OnPS3()
 		cfg.kind = "StaticLib"
 		result = premake.gettarget(cfg, "link", "posix", "PS3", "macosx")
+		test.isequal([[../bin/libMyProject.a]], result.fullpath)
+	end
+
+	function T.targets.StaticLib_Link_IgnoresImpLib()
+		cfg.kind = "StaticLib"
+		cfg.implibdir = "../lib"
+		result = premake.gettarget(cfg, "link", "posix", "posix", "macosx")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
