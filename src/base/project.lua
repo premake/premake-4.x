@@ -352,10 +352,7 @@
 			elseif not prj and (kind == "system" or kind == "all") then
 
 				if (part == "directory") then
-					local dir = path.getdirectory(link)
-					if (dir ~= ".") then
-						item = dir
-					end
+					item = path.getdirectory(link)
 				elseif (part == "fullpath") then
 					item = link
 					if namestyle == "windows" then
