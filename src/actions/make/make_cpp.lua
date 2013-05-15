@@ -262,8 +262,8 @@
 		-- Patch #3401184 changed the order
 		_p('  ALL_LDFLAGS   += $(LDFLAGS)%s', make.list(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions)))
 
-		_p('  LIBS      +=%s', make.list(cc.getlinkflags(cfg)))
 		_p('  LDDEPS    +=%s', make.list(_MAKE.esc(premake.getlinks(cfg, "siblings", "fullpath"))))
+		_p('  LIBS      += $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
 
 		if cfg.kind == "StaticLib" then
 			if cfg.platform:startswith("Universal") then

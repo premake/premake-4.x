@@ -27,8 +27,9 @@
 
 
 --
--- Check linking to a shared library sibling project. Should add the library
--- path using -L, and link using the base name with -l flag.
+-- Check linking to a shared library sibling project. In order to support
+-- custom target prefixes and extensions, use the full, relative path
+-- to the library.
 --
 
 	function suite.onSharedLibrarySibling()
@@ -39,15 +40,15 @@
 		prepare()
 		test.capture [[
   ALL_LDFLAGS   += $(LDFLAGS) -Llibs -s
-  LIBS      += -lMyProject2
   LDDEPS    += libs/libMyProject2.so
+  LIBS      += $(LDDEPS)
 		]]
 	end
 
 
 --
--- Check linking to a static library sibling project. Should use the full
--- decorated library name, relative path, and no -l flag.
+-- Check linking to a static library sibling project. As with shared
+-- libraries, it should list out the full relative path.
 --
 
 	function suite.onStaticLibrarySibling()
@@ -58,8 +59,8 @@
 		prepare()
 		test.capture [[
   ALL_LDFLAGS   += $(LDFLAGS) -Llibs -s
-  LIBS      += libs/libMyProject2.a
   LDDEPS    += libs/libMyProject2.a
+  LIBS      += $(LDDEPS)
 		]]
 	end
 
@@ -77,8 +78,8 @@
 		prepare()
 		test.capture [[
   ALL_LDFLAGS   += $(LDFLAGS) -s
-  LIBS      +=
   LDDEPS    +=
+  LIBS      += $(LDDEPS)
 		]]
 	end
 
@@ -101,8 +102,8 @@
 		prepare()
 		test.capture [[
   ALL_LDFLAGS   += $(LDFLAGS) -L../MyProject2 -s
-  LIBS      += -lMyProject2
   LDDEPS    += ../MyProject2/libMyProject2.so
+  LIBS      += $(LDDEPS)
 		]]
 	end
 
@@ -119,7 +120,7 @@
 	prepare()
 	test.capture [[
   ALL_LDFLAGS   += $(LDFLAGS) -L../libs -s
-  LIBS      += -lSomeLib
   LDDEPS    +=
+  LIBS      += $(LDDEPS) -lSomeLib
 	]]
  end
