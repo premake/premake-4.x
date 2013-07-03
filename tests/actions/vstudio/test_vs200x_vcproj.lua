@@ -1,7 +1,7 @@
 --
 -- tests/test_vs200x_vcproj.lua
 -- Automated test suite for Visual Studio 2002-2008 C/C++ project generation.
--- Copyright (c) 2009 Jason Perkins and the Premake project
+-- Copyright (c) 2009-2013 Jason Perkins and the Premake project
 --
 
 	T.vs200x_vcproj = { }
@@ -443,11 +443,15 @@
 
 
 --
--- Test precompiled header handling
+-- Test precompiled header handling; the header should be treated as
+-- a plain string value, with no path manipulation applied, since it
+-- needs to match the value of the #include statement used in the
+-- project code.
 --
 
 	function suite.CompilerBlock_OnPCH()
-		pchheader "source/common.h"
+		location "build/MyProject"
+		pchheader "include/common.h"
 		pchsource "source/common.cpp"
 		prepare()
 		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
@@ -459,7 +463,7 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="common.h"
+				PrecompiledHeaderThrough="include/common.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				ProgramDataBaseFileName="$(OutDir)\MyProject.pdb"
