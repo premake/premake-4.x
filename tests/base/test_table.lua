@@ -55,3 +55,11 @@
 	function suite.isempty_ReturnsFalseOnNotEmpty()
 		test.isfalse(table.isempty({ 1 }))
 	end
+	
+	function suite.isempty_ReturnsFalseOnNotEmptyMap()
+		test.isfalse(table.isempty({ name = 'premake' }))
+	end
+	
+	function suite.isempty_ReturnsFalseOnNotEmptyMapWithFalseKey()
+		test.isfalse(table.isempty({ [false] = 0 }))
+	end
