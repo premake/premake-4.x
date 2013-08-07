@@ -23,7 +23,7 @@
 		-- Linux ldconfig file parser to find system library locations
 		local first, last
 		local dirs = { }
-		local fiel = io.open(conf_file)
+		local file = io.open(conf_file)
 		-- Handle missing ld.so.conf (BSDs) gracefully
 		if file == nil then
 			return dirs
