@@ -267,11 +267,15 @@
 				_p('  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)')
 			end
 		else
+
 			-- this was $(TARGET) $(LDFLAGS) $(OBJECTS)
-			--  but had trouble linking to certain static libs so $(OBJECTS) moved up
-			-- then $(LDFLAGS) moved to end
-			--   https://sourceforge.net/tracker/?func=detail&aid=3430158&group_id=71616&atid=531880
-			_p('  LINKCMD    = $(%s) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(LIBS) $(ALL_LDFLAGS)', iif(cfg.language == "C", "CC", "CXX"))
+			--   but had trouble linking to certain static libs; $(OBJECTS) moved up
+			-- $(LDFLAGS) moved to end (http://sourceforge.net/p/premake/patches/107/)
+			-- $(LIBS) moved to end (http://sourceforge.net/p/premake/bugs/279/)
+
+			local tool = iif(cfg.language == "C", "CC", "CXX")
+			_p('  LINKCMD    = $(%s) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)', tool)
+
 		end
 	end
 
