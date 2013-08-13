@@ -312,8 +312,8 @@
 			end
 		end
 
-		_p('  PCH        = %s', _MAKE.esc(path.getrelative(cfg.location, cfg.pchheader)))
-		_p('  GCH        = $(OBJDIR)/$(notdir $(PCH)).gch', _MAKE.esc(path.getname(cfg.pchheader)))
+		_p('  PCH        = %s', _MAKE.esc(path.getrelative(cfg.location, pch)))
+		_p('  GCH        = $(OBJDIR)/$(notdir $(PCH)).gch')
 
 	end
 
