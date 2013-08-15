@@ -432,20 +432,37 @@
 		for _, node in ipairs(tr.products.children) do
 			local name = tr.project.name
 			
+			-- This function checks whether there are build commands of a specific
+			-- type to be executed; they will be generated correctly, but the project
+			-- commands will not contain any per-configuration commands, so the logic
+			-- has to be extended a bit to account for that.
+			local function hasBuildCommands(which)
+				-- standard check...this is what existed before
+				if #tr.project[which] > 0 then
+					return true
+				end
+				-- what if there are no project-level commands? check configs...
+				for _, cfg in ipairs(tr.configs) do
+					if #cfg[which] > 0 then
+						return true
+					end
+				end
+			end
+			
 			_p(2,'%s /* %s */ = {', node.targetid, name)
 			_p(3,'isa = PBXNativeTarget;')
 			_p(3,'buildConfigurationList = %s /* Build configuration list for PBXNativeTarget "%s" */;', node.cfgsection, name)
 			_p(3,'buildPhases = (')
-			if #tr.project.prebuildcommands > 0 then
+			if hasBuildCommands('prebuildcommands') then
 				_p(4,'9607AE1010C857E500CD1376 /* Prebuild */,')
 			end
 			_p(4,'%s /* Resources */,', node.resstageid)
 			_p(4,'%s /* Sources */,', node.sourcesid)
-			if #tr.project.prelinkcommands > 0 then
+			if hasBuildCommands('prelinkcommands') then
 				_p(4,'9607AE3510C85E7E00CD1376 /* Prelink */,')
 			end
 			_p(4,'%s /* Frameworks */,', node.fxstageid)
-			if #tr.project.postbuildcommands > 0 then
+			if hasBuildCommands('postbuildcommands') then
 				_p(4,'9607AE3710C85E8F00CD1376 /* Postbuild */,')
 			end
 			_p(3,');')
