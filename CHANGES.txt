@@ -75,6 +75,7 @@
 * Bug 171: ImpLib used incorrectly in dependency paths
 * Bug 176: Target prefix breaks GCC linking
 * Improved handling of precompiled headers across toolsets
+* Initial support for Visual Studio 2013 (Igor Karatayev)
 
 
 -------
