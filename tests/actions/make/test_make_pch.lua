@@ -85,6 +85,7 @@ $(GCH): $(PCH)
 		]]
 	end
 
+
 --
 -- Ensure that PCH is included on all files that use it.
 --
@@ -101,3 +102,19 @@ $(OBJDIR)/main.o: main.cpp
 		]]
 	end
 
+
+--
+-- If the header is located on one of the include file
+-- search directories, it should get found automatically.
+--
+
+	function suite.findsPCH_onIncludeDirs()
+		location "MyProject"
+		pchheader "premake.h"
+		includedirs { "../src/host" }
+		prepare()
+		_.pchconfig(cfg)
+		test.capture [[
+  PCH        = ../../src/host/premake.h
+		]]
+	end

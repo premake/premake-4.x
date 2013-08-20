@@ -305,7 +305,11 @@
 
 		local pch = cfg.pchheader
 		for _, incdir in ipairs(cfg.includedirs) do
-			local testname = path.join(incdir, pch)
+
+			-- convert this back to an absolute path for os.isfile()
+			local abspath = path.getabsolute(path.join(cfg.project.location, incdir))
+
+			local testname = path.join(abspath, pch)
 			if os.isfile(testname) then
 				pch = path.getrelative(cfg.location, testname)
 				break
