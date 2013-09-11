@@ -228,7 +228,8 @@
 		if #list > 0 then
 			_p(4,'%s = (', tag)
 			for _, item in ipairs(list) do
-				_p(5, '"%s",', item)
+				local escaped_item = item:gsub("\"", "\\\"")
+				_p(5, '"%s",', escaped_item)
 			end
 			_p(4,');')
 		end
