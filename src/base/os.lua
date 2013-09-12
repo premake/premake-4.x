@@ -23,7 +23,12 @@
 		-- Linux ldconfig file parser to find system library locations
 		local first, last
 		local dirs = { }
-		for line in io.lines(conf_file) do
+		local file = io.open(conf_file)
+		-- Handle missing ld.so.conf (BSDs) gracefully
+		if file == nil then
+			return dirs
+		end
+		for line in file:lines() do
 			-- ignore comments
 			first = line:find("#", 1, true)
 			if first ~= nil then
