@@ -26,7 +26,7 @@
 		_p('  <BuildMatrix>')
 		for _, platform in ipairs(platforms) do
 			for _, cfgname in ipairs(sln.configurations) do
-				local name = premake.getconfigname(cfgname, platform)
+				local name = premake.getconfigname(cfgname, platform):gsub("|","_")
 				_p('    <WorkspaceConfiguration Name="%s" Selected="yes">', name)
 				for _,prj in ipairs(sln.projects) do
 					_p('      <Project Name="%s" ConfigName="%s"/>', prj.name, name)

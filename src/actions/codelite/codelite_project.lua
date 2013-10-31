@@ -151,7 +151,7 @@
 
 		for _, platform in ipairs(platforms) do
 			for cfg in premake.eachconfig(prj, platform) do
-				_p('  <Dependencies name="%s">', cfg.longname)
+				_p('  <Dependencies name="%s">', cfg.longname:gsub("|","_"))
 				for _,dep in ipairs(premake.getdependencies(prj)) do
 					_p('    <Project Name="%s"/>', dep.name)
 				end
