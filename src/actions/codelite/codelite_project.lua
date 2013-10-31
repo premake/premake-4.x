@@ -65,7 +65,7 @@
 
 		for _, platform in ipairs(platforms) do
 			for cfg in premake.eachconfig(prj, platform) do
-				local name = premake.esc(cfg.longname)
+				local name = premake.esc(cfg.longname):gsub("|","_")
 				local compiler = iif(cfg.language == "C", "gcc", "g++")
 				_p('    <Configuration Name="%s" CompilerType="gnu %s" DebuggerType="GNU gdb debugger" Type="%s">', name, compiler, types[cfg.kind])
 			
