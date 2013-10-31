@@ -30,7 +30,7 @@
 				_p(depth, '<File Name="%s"/>', node.cfg.name)
 			end,
 			
-		}, false, 1)
+		}, true, 1)
 	end
 	
 
