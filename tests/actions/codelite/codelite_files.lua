@@ -10,15 +10,15 @@
 
 
 --
--- Setup 
+-- Setup
 --
 
 	local sln, prj
-	
+
 	function suite.setup()
 		sln = test.createsolution()
 	end
-	
+
 	local function prepare()
 		io.indent = "  "
 		premake.bake.buildconfigs()
@@ -35,7 +35,9 @@
 		files { "hello.c" }
 		prepare()
 		test.capture [[
-  <File Name="hello.c"/>
+  <VirtualDirectory Name="MyProject">
+    <File Name="hello.c"/>
+  </VirtualDirectory>
 		]]
 	end
 
@@ -44,8 +46,10 @@
 		files { "src/hello.c" }
 		prepare()
 		test.capture [[
-  <VirtualDirectory Name="src">
-    <File Name="src/hello.c"/>
+  <VirtualDirectory Name="MyProject">
+    <VirtualDirectory Name="src">
+      <File Name="src/hello.c"/>
+    </VirtualDirectory>
   </VirtualDirectory>
 		]]
 	end
@@ -55,9 +59,11 @@
 		files { "src/greetings/hello.c" }
 		prepare()
 		test.capture [[
-  <VirtualDirectory Name="src">
-    <VirtualDirectory Name="greetings">
-      <File Name="src/greetings/hello.c"/>
+  <VirtualDirectory Name="MyProject">
+    <VirtualDirectory Name="src">
+      <VirtualDirectory Name="greetings">
+        <File Name="src/greetings/hello.c"/>
+      </VirtualDirectory>
     </VirtualDirectory>
   </VirtualDirectory>
 		]]
