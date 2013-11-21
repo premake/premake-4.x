@@ -1,7 +1,7 @@
 /**
  * \file   premake.c
  * \brief  Program entry point.
- * \author Copyright (c) 2002-2012 Jason Perkins and the Premake project
+ * \author Copyright (c) 2002-2013 Jason Perkins and the Premake project
  */
 
 #include <stdlib.h>
@@ -14,7 +14,7 @@
 
 
 #define VERSION        "HEAD"
-#define COPYRIGHT      "Copyright (C) 2002-2012 Jason Perkins and the Premake Project"
+#define COPYRIGHT      "Copyright (C) 2002-2013 Jason Perkins and the Premake Project"
 #define ERROR_MESSAGE  "%s\n"
 
 
@@ -88,7 +88,7 @@ int premake_init(lua_State* L)
 	/* set the OS platform variable */
 	lua_pushstring(L, PLATFORM_STRING);
 	lua_setglobal(L, "_OS");
-		
+
 	return OKAY;
 }
 
@@ -100,7 +100,7 @@ int premake_execute(lua_State* L, int argc, const char** argv)
 
 	/* Run the built-in Premake scripts */
 	if (z == OKAY)  z = load_builtin_scripts(L);
-	
+
 	return z;
 }
 
@@ -176,14 +176,14 @@ int premake_locate(lua_State* L, const char* argv0)
 		os_getcwd(L);
 		lua_pushstring(L, "/");
 		lua_pushstring(L, argv0);
-		
+
 		if (!path_isabsolute(L)) {
 			lua_concat(L, 3);
 		}
 		else {
 			lua_pop(L, 1);
 		}
-		
+
 		path = lua_tostring(L, -1);
 	}
 
