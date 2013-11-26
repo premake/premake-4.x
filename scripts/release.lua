@@ -2,7 +2,7 @@
 -- Prepare a new Premake release. This is still incomplete and some manual
 -- work is needed to get everything packaged up. See RELEASE.txt in this
 -- folder for the full checklist.
---  
+--
 -- Info on using Mercurial to manage releases:
 --  http://hgbook.red-bean.com/read/managing-releases-and-branchy-development.html
 --  http://stevelosh.com/blog/2009/08/a-guide-to-branching-in-mercurial/
@@ -12,7 +12,7 @@
 function dorelease()
 	local z
 
--- 
+--
 -- Helper function: runs a command (formatted, with optional arguments) and
 -- suppresses any output. Works on both Windows and POSIX. Might be a good
 -- candidate for a core function.
@@ -27,7 +27,7 @@ function dorelease()
 	end
 
 
-	
+
 --
 -- Make sure a version was specified
 --
@@ -35,10 +35,10 @@ function dorelease()
 	if #_ARGS ~= 2 then
 		error("** Usage: release [version] [source | binary]", 0)
 	end
-	
+
 	local version = _ARGS[1]
 	local kind = _ARGS[2]
-	
+
     local pkgname = "premake-" .. version
 
 
@@ -75,21 +75,21 @@ function dorelease()
 --
 ---------------------------------------------------------------------------
 
--- 
+--
 -- Check out the release tagged sources to releases/
 --
 
 	print("Downloading release tag...")
-	
+
 	os.mkdir("release")
 	os.chdir("release")
-	
+
 	os.rmdir(pkgname)
 	z = exec( "hg clone -r %s .. %s", version, pkgname)
 	if z ~= 0 then
 		error("** Failed to download tagged sources", 0)
 	end
-	
+
 	os.chdir(pkgname)
 
 
@@ -118,7 +118,7 @@ function dorelease()
 		error("** Failed to update the embedded scripts", 0)
 	end
 
-	
+
 --
 -- Generate source packaging
 --
@@ -136,17 +136,19 @@ function dorelease()
 		os.rmdir(".hg")
 		os.rmdir(".hgignore")
 		os.rmdir(".hgtags")
+		os.rmdir(".gitignore")
 
-	
+
 	--
 	-- Generate project files to the build directory
 	--
 
 		print("Generating project files...")
-		
+
 		exec("premake4 /to=build/vs2005 vs2005")
 		exec("premake4 /to=build/vs2008 vs2008")
 		exec("premake4 /to=build/vs2010 vs2010")
+		exec("premake4 /to=build/vs2012 vs2012")
 		exec("premake4 /to=build/gmake.windows /os=windows gmake")
 		exec("premake4 /to=build/gmake.unix /os=linux gmake")
 		exec("premake4 /to=build/gmake.macosx /os=macosx /platform=universal32 gmake")
@@ -174,11 +176,11 @@ function dorelease()
 --
 
 	else
-	
+
 		print("Building platform binary release...")
 
-		exec("premake4 /platform=universal32 gmake")
-		exec("make config=%s", iif(os.is("macosx"), "releaseuniv32", "release"))
+		exec("premake4 /platform=x32 gmake")
+		exec("make config=release32")
 
 		local fname
 		os.chdir("bin/release")
@@ -204,9 +206,9 @@ function dorelease()
 --
 -- Clean up
 --
-	
+
 	os.rmdir(pkgname)
-	
+
 	print("")
 	print( "Finished.")
 
