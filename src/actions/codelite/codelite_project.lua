@@ -95,9 +95,12 @@
 				for _,v in ipairs(premake.getlinks(cfg, "all", "directory")) do
 					_p('        <LibraryPath Value="%s" />', premake.esc(v))
 				end
-				for _,v in ipairs(premake.getlinks(cfg, "all", "basename")) do
+				for _,v in ipairs(premake.getlinks(cfg, "siblings", "basename")) do
 					_p('        <Library Value="%s" />', premake.esc(v))
 				end
+				for _,v in ipairs(premake.getlinks(cfg, "system", "name")) do
+					_p('        <Library Value="%s" />', premake.esc(v))
+				end		
 				_p('      </Linker>')
 				-- end linker block --
 				
