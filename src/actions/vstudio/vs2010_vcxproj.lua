@@ -181,10 +181,18 @@
 		end
 	end
 
+	local function resinclude_dirs(indent,cfg)
+		if #cfg.includedirs > 0 or #cfg.resincludedirs > 0 then
+			local dirs = table.join(cfg.includedirs, cfg.resincludedirs)
+			_p(indent,'<AdditionalIncludeDirectories>%s;%%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>'
+					,premake.esc(path.translate(table.concat(dirs, ";"), '\\')))
+		end
+	end
+
 	local function resource_compile(cfg)
 		_p(2,'<ResourceCompile>')
 			preprocessor(3,cfg)
-			include_dirs(3,cfg)
+			resinclude_dirs(3,cfg)
 		_p(2,'</ResourceCompile>')
 
 	end
