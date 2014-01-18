@@ -253,7 +253,7 @@
 			_p('      <Name>%s</Name>', premake.esc(ref.name))
 			_p('    </ProjectReference>')
 		end
-		for _, linkname in ipairs(premake.getlinks(prj, "system", "basename")) do
+		for _, linkname in ipairs(premake.getlinks(prj, "system", "name")) do
 			_p('    <Reference Include="%s" />', premake.esc(linkname))
 		end
 		_p('  </ItemGroup>')
