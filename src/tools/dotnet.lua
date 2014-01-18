@@ -3,7 +3,6 @@
 -- Interface for the C# compilers, all of which are flag compatible.
 -- Copyright (c) 2002-2009 Jason Perkins and the Premake project
 --
-
 	
 	premake.dotnet = { }
 	premake.dotnet.namestyle = "windows"
@@ -36,6 +35,12 @@
 			return "EmbeddedResource"
 		elseif fcfg.buildaction == "Copy" or ext == ".asax" or ext == ".aspx" then
 			return "Content"
+		elseif fcfg.buildaction == "Page" or ext == ".xaml" then
+			if ( path.getname( fcfg.name ) == "App.xaml" ) then
+				return "ApplicationDefinition"
+			else
+				return "Page"
+			end
 		else
 			return "None"
 		end
