@@ -589,7 +589,7 @@
 -- an empty <Tool> element.
 --
 
-	local blockmap = 
+	vc200x.toolmap = 
 	{
 		VCCLCompilerTool       = vc200x.VCCLCompilerTool,
 		VCCLCompilerTool_PS3   = vc200x.VCCLCompilerTool_PS3,
@@ -598,9 +598,12 @@
 		VCManifestTool         = vc200x.VCManifestTool,
 		VCMIDLTool             = vc200x.VCMIDLTool,
 		VCResourceCompilerTool = vc200x.VCResourceCompilerTool,
+		VCPreBuildEventTool    = function(cfg) vc200x.buildstepsblock("VCPreBuildEventTool", cfg.prebuildcommands) end,
+		VCPreLinkEventTool     = function(cfg) vc200x.buildstepsblock("VCPreLinkEventTool", cfg.prelinkcommands) end,
+		VCPostBuildEventTool   = function(cfg) vc200x.buildstepsblock("VCPostBuildEventTool", cfg.postbuildcommands) end,
 	}
-	
-	
+
+
 --
 -- Return a list of sections for a particular Visual Studio version and target platform.
 --
@@ -733,21 +736,12 @@
 				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 		
 				-- Start a configuration
-				vc200x.Configuration(cfginfo.name, cfg)				
+				vc200x.Configuration(cfginfo.name, cfg)
 				for _, block in ipairs(getsections(_ACTION, cfginfo.src_platform)) do
 				
-					if blockmap[block] then
-						blockmap[block](cfg)						
-		
-					-- Build event blocks --
-					elseif block == "VCPreBuildEventTool" then
-						vc200x.buildstepsblock("VCPreBuildEventTool", cfg.prebuildcommands)
-					elseif block == "VCPreLinkEventTool" then
-						vc200x.buildstepsblock("VCPreLinkEventTool", cfg.prelinkcommands)
-					elseif block == "VCPostBuildEventTool" then
-						vc200x.buildstepsblock("VCPostBuildEventTool", cfg.postbuildcommands)
-					-- End build event blocks --
-					
+					if vc200x.toolmap[block] then
+						vc200x.toolmap[block](cfg)
+
 					-- Xbox 360 custom sections --
 					elseif block == "VCX360DeploymentTool" then
 						_p(3,'<Tool')
