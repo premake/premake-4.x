@@ -324,6 +324,7 @@
 
 	function cpp.pchrules(prj)
 		_p('ifneq (,$(PCH))')
+		_p('.NOTPARALLEL: $(GCH) $(PCH)')
 		_p('$(GCH): $(PCH)')
 		_p('\t@echo $(notdir $<)')
 
