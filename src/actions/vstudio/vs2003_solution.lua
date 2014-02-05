@@ -10,6 +10,7 @@
 
 
 	function sln2003.generate(sln)
+		io.indent = nil -- back to default
 		io.eol = '\r\n'
 
 		-- Precompute Visual Studio configurations
