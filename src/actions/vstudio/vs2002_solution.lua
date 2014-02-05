@@ -9,6 +9,7 @@
 	local sln2002 = premake.vstudio.sln2002
 
 	function sln2002.generate(sln)
+		io.indent = nil -- back to default
 		io.eol = '\r\n'
 
 		-- Precompute Visual Studio configurations
