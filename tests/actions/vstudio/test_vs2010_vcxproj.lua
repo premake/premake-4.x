@@ -2,6 +2,7 @@
 	local vs10_vcxproj = T.vs2010_vcxproj
 	local include_directory = "bar/foo"
 	local include_directory2 = "baz/foo"
+	local include_directory_vs_macros = "$(Macro1)/foo/bar/$(Macro2)/baz"
 	local debug_define = "I_AM_ALIVE_NUMBER_FIVE"
 	local vc2010 = premake.vstudio.vc2010
 
@@ -25,7 +26,8 @@
 		includedirs
 		{
 			include_directory,
-			include_directory2
+			include_directory2,
+			include_directory_vs_macros
 		}
 		files
 		{
@@ -166,6 +168,13 @@
 	function vs10_vcxproj.includeDirectories_debugEntryContains_include_directory2PostfixWithSemiColon()
 		local buffer = get_buffer()
 		test.string_contains(buffer,cl_compile_string('Debug').. '.*<AdditionalIncludeDirectories>.*'.. path.translate(include_directory2, '\\') ..';.*</AdditionalIncludeDirectories>')
+	end
+
+	function vs10_vcxproj.includeDirectories_debugEntryContains_include_directory_vs_macros()
+		local buffer = get_buffer()
+		-- visual studio macros use $ as a prefix, which is a special regex character, so we need to replace them.
+		local search_string = string.gsub(include_directory_vs_macros, "%$", "%$%")
+		test.string_contains(buffer,cl_compile_string('Debug').. '.*<AdditionalIncludeDirectories>.*'.. path.translate(search_string, '\\') ..'.*</AdditionalIncludeDirectories>')
 	end
 
 	function vs10_vcxproj.debugContainsPreprossorBlock()
