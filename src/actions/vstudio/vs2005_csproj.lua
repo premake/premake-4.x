@@ -38,7 +38,7 @@
 				local basename = fname:sub(1, -9)
 				local testname = basename .. ".xaml"
 				if premake.findfile(prj, testname) then
-					return "SubTypeCode", testname
+					return "SubTypeCode", path.getname(testname)
 				end       
 			else
 				-- is there a *.Designer.cs file?
