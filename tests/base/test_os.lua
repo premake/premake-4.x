@@ -8,7 +8,7 @@
 	T.os = { }
 	local suite = T.os
 
-	
+
 --
 -- os.findlib() tests
 --
@@ -17,17 +17,17 @@
 		if os.is("windows") then
 			test.istrue(os.findlib("user32"))
 		elseif os.is("haiku") then
-			test.istrue(os.findlib("root"))		
+			test.istrue(os.findlib("root"))
 		else
-			test.istrue(os.findlib("m"))		
+			test.istrue(os.findlib("m"))
 		end
 	end
-	
+
 	function suite.findlib_FailsOnBadLibName()
 		test.isfalse(os.findlib("NoSuchLibraryAsThisOneHere"))
 	end
-	
-	
+
+
 --
 -- os.isfile() tests
 --
@@ -49,7 +49,7 @@
 	function suite.matchfiles_OnNonRecursive()
 		local result = os.matchfiles("*.lua")
 		test.istrue(table.contains(result, "testfx.lua"))
-		test.isfalse(table.contains(result, "folder/ok.lua"))		
+		test.isfalse(table.contains(result, "folder/ok.lua"))
 	end
 
 	function suite.matchfiles_Recursive()
@@ -61,31 +61,36 @@
 		local result = os.matchfiles("**.lua")
 		test.isfalse(table.contains(result, ".svn/text-base/testfx.lua.svn-base"))
 	end
-	
+
 	function suite.matchfiles_OnSubfolderMatch()
 		local result = os.matchfiles("**/xcode/*")
 		test.istrue(table.contains(result, "actions/xcode/test_xcode_project.lua"))
 		test.isfalse(table.contains(result, "premake4.lua"))
 	end
-	
+
 	function suite.matchfiles_OnDotSlashPrefix()
 		local result = os.matchfiles("./**.lua")
 		test.istrue(table.contains(result, "folder/ok.lua"))
 	end
-	
+
 	function suite.matchfiles_OnImplicitEndOfString()
 		local result = os.matchfiles("folder/*.lua")
 		test.istrue(table.contains(result, "folder/ok.lua"))
 		test.isfalse(table.contains(result, "folder/ok.lua.2"))
 	end
-	
+
 	function suite.matchfiles_OnLeadingDotSlashWithPath()
 		local result = os.matchfiles("./folder/*.lua")
 		test.istrue(table.contains(result, "folder/ok.lua"))
 	end
 
+	function suite.matchfiles_OnDottedFile()
+		local result = os.matchfiles("../.*")
+		test.istrue(table.contains(result, "../.hgignore"))
+	end
 
-	
+
+
 --
 -- os.pathsearch() tests
 --
@@ -93,20 +98,20 @@
 	function suite.pathsearch_ReturnsNil_OnNotFound()
 		test.istrue( os.pathsearch("nosuchfile", "aaa;bbb;ccc") == nil )
 	end
-	
+
 	function suite.pathsearch_ReturnsPath_OnFound()
 		test.isequal(os.getcwd(), os.pathsearch("premake4.lua", os.getcwd()))
 	end
-	
+
 	function suite.pathsearch_FindsFile_OnComplexPath()
 		test.isequal(os.getcwd(), os.pathsearch("premake4.lua", "aaa;"..os.getcwd()..";bbb"))
 	end
-	
+
 	function suite.pathsearch_NilPathsAllowed()
 		test.isequal(os.getcwd(), os.pathsearch("premake4.lua", nil, os.getcwd(), nil))
 	end
 
-	
+
 --
 -- os.uuid() tests
 --
@@ -123,4 +128,4 @@
 		test.isequal("-", g:sub(19,19))
 		test.isequal("-", g:sub(24,24))
 	end
-	
+

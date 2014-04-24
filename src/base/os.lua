@@ -206,7 +206,9 @@
 				while (os.matchnext(m)) do
 					if not os.matchisfile(m) then
 						local dirname = os.matchname(m)
-						matchwalker(path.join(basedir, dirname))
+						if (not dirname:startswith(".")) then
+							matchwalker(path.join(basedir, dirname))
+						end
 					end
 				end
 				os.matchdone(m)
