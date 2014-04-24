@@ -86,6 +86,7 @@
 	dofile("actions/vstudio/cs2005/projectelement.lua")
 	dofile("actions/vstudio/cs2005/projectsettings.lua")
 	dofile("actions/vstudio/cs2005/propertygroup.lua")
+	dofile("actions/vstudio/cs2005/buildevents.lua")
 
 	-- Visual Studio 2005-2010 solutions
 	dofile("actions/vstudio/sln2005/dependencies.lua")
