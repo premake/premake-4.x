@@ -192,9 +192,10 @@
 			while (os.matchnext(m)) do
 				local isfile = os.matchisfile(m)
 				if ((wantfiles and isfile) or (not wantfiles and not isfile)) then
-					local fname = path.join(basedir, os.matchname(m))
-					if fname:match(mask) == fname then
-						table.insert(result, fname)
+					local basename = os.matchname(m)
+					local fullname = path.join(basedir, basename)
+					if basename ~= ".." and fullname:match(mask) == fullname then
+						table.insert(result, fullname)
 					end
 				end
 			end
