@@ -47,11 +47,21 @@
 
 
 /* Bootstrapping helper functions */
+void do_getabsolute(char* result, const char* value, const char* relative_to);
+int do_getcwd(char* buffer, size_t size);
+int do_isabsolute(const char* path);
 int do_isfile(const char* filename);
+void do_normalize(lua_State* L, char* buffer, const char* path);
+void do_translate(char* value, const char sep);
 
 
 /* Built-in functions */
+int path_getabsolute(lua_State* L);
+int path_getrelative(lua_State* L);
 int path_isabsolute(lua_State* L);
+int path_join(lua_State* L);
+int path_normalize(lua_State* L);
+int path_translate(lua_State* L);
 int os_chdir(lua_State* L);
 int os_copyfile(lua_State* L);
 int os_getcwd(lua_State* L);

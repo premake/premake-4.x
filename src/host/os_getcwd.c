@@ -9,26 +9,28 @@
 int os_getcwd(lua_State* L)
 {
 	char buffer[0x4000];
-	char* ch;
-	int result;
-
-#if PLATFORM_WINDOWS
-	result = (GetCurrentDirectory(0x4000, buffer) != 0);
-#else
-	result = (getcwd(buffer, 0x4000) != 0);
-#endif
-
-	if (!result)
-		return 0;
-
-	/* convert to platform-neutral directory separators */
-	for (ch = buffer; *ch != '\0'; ++ch)
-	{
-		if (*ch == '\\') *ch = '/';
+	if (do_getcwd(buffer, 0x4000)) {
+		lua_pushstring(L, buffer);
+		return 1;
 	}
-
-	lua_pushstring(L, buffer);
-	return 1;
+	else {
+		return 0;
+	}
 }
 
 
+int do_getcwd(char* buffer, size_t size)
+{
+	int result;
+
+#if PLATFORM_WINDOWS
+	result = (GetCurrentDirectory(size, buffer) != 0);
+	if (result) {
+		do_translate(buffer, '/');
+	}
+#else
+	result = (getcwd(buffer, size) != 0);
+#endif
+
+	return result;
+}
