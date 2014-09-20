@@ -20,6 +20,7 @@
 
 static int process_arguments(lua_State* L, int argc, const char** argv);
 static int process_option(lua_State* L, const char* arg);
+static int load_file_scripts(lua_State* L);
 static int load_builtin_scripts(lua_State* L);
 
 int premake_locate(lua_State* L, const char* argv0);
@@ -104,8 +105,22 @@ int premake_execute(lua_State* L, int argc, const char** argv)
 	int z = process_arguments(L, argc, argv);
 
 	/* Run the built-in Premake scripts */
-	if (z == OKAY)  z = load_builtin_scripts(L);
-
+	if (z == OKAY)
+	{
+#if !defined(NDEBUG)
+		z = load_file_scripts(L);
+#else
+		if (scripts_path)
+		{
+			z = load_file_scripts(L);
+		}
+		else
+		{
+			z = load_builtin_scripts(L);
+		}
+#endif
+	}
+	
 	return z;
 }
 
@@ -205,7 +220,7 @@ int premake_locate(lua_State* L, const char* argv0)
  * but I need the value of the /scripts option to find them.
  * \returns OKAY if successful.
  */
-int process_arguments(lua_State* L, int argc, const char** argv)
+static int process_arguments(lua_State* L, int argc, const char** argv)
 {
 	int i;
 
@@ -252,7 +267,7 @@ int process_arguments(lua_State* L, int argc, const char** argv)
  * Parse an individual command-line option.
  * \returns OKAY if successful.
  */
-int process_option(lua_State* L, const char* arg)
+static int process_option(lua_State* L, const char* arg)
 {
 	char key[512];
 	const char* value;
@@ -281,6 +296,7 @@ int process_option(lua_State* L, const char* arg)
 	if (strcmp(key, "scripts") == 0 && strlen(value) > 0)
 	{
 		scripts_path = value;
+		printf("Scripts path: %s\n", value);
 	}
 
 	return OKAY;
@@ -288,13 +304,12 @@ int process_option(lua_State* L, const char* arg)
 
 
 
-#if !defined(NDEBUG)
 /**
  * When running in debug mode, the scripts are loaded from the disk. The path to
  * the scripts must be provided via either the /scripts command line option or
  * the PREMAKE_PATH environment variable.
  */
-int load_builtin_scripts(lua_State* L)
+static int load_file_scripts(lua_State* L)
 {
 	const char* filename;
 
@@ -340,16 +355,14 @@ int load_builtin_scripts(lua_State* L)
 		return (int)lua_tonumber(L, -1);
 	}
 }
-#endif
 
 
-#if defined(NDEBUG)
 /**
  * When running in release mode, the scripts are loaded from a static data
  * buffer, where they were stored by a preprocess. To update these embedded
  * scripts, run `premake4 embed` then rebuild.
  */
-int load_builtin_scripts(lua_State* L)
+static int load_builtin_scripts(lua_State* L)
 {
 	int i;
 	for (i = 0; builtin_scripts[i]; ++i)
@@ -373,4 +386,4 @@ int load_builtin_scripts(lua_State* L)
 		return (int)lua_tonumber(L, -1);
 	}
 }
-#endif
+
