@@ -33,7 +33,7 @@
 		cpp.flags(cfg, premake.gcc)
 		test.capture [[
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP -I$(LIBOGC_INC) $(MACHDEP) -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS)
   ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   		]]
