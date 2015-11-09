@@ -241,6 +241,12 @@
 			linkagecopy = true,
 		},
 
+		frameworkdirs =
+		{
+			kind = "dirlist",
+			scope = "config",
+		},
+
 		linkoptions =
 		{
 			kind  = "list",
